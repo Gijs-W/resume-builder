@@ -27,6 +27,7 @@ interface WorkItem {
   jobTitle: string
   company: string
   description: string
+  pageBreakBefore?: boolean
 }
 
 interface EduItem {
@@ -36,6 +37,7 @@ interface EduItem {
   studyTitle: string
   school: string
   description: string
+  pageBreakBefore?: boolean
 }
 
 interface SkillItem {
@@ -48,6 +50,9 @@ interface ResumeData {
   workTitle: string
   eduTitle: string
   skillsTitle: string
+  workPageBreak: boolean
+  eduPageBreak: boolean
+  skillsPageBreak: boolean
   work: WorkItem[]
   education: EduItem[]
   skills: SkillItem[]
@@ -75,6 +80,9 @@ const DEFAULT: ResumeData = {
   workTitle: 'Work Experience',
   eduTitle: 'Education',
   skillsTitle: 'Skills',
+  workPageBreak: false,
+  eduPageBreak: false,
+  skillsPageBreak: false,
   work: [
     {
       id: '1',
@@ -216,6 +224,22 @@ function ContactRow({
   )
 }
 
+function PageBreakToggle({ active, onToggle }: { active: boolean; onToggle: () => void }) {
+  if (active) {
+    return (
+      <div className="pb-line no-print">
+        <span className="pb-label">Page break</span>
+        <button className="pb-remove" onClick={onToggle} title="Remove page break">×</button>
+      </div>
+    )
+  }
+  return (
+    <button className="pb-add no-print" onClick={onToggle} title="Add page break here">
+      page break
+    </button>
+  )
+}
+
 function ResizablePhoto({
   src,
   width,
@@ -286,6 +310,23 @@ export default function App() {
     reader.onload = ev => setPersonal('picture', ev.target!.result as string)
     reader.readAsDataURL(file)
   }
+
+  const toggleSectionBreak = (key: 'workPageBreak' | 'eduPageBreak' | 'skillsPageBreak') =>
+    setData(d => ({ ...d, [key]: !d[key] }))
+
+  const toggleWorkBreak = (id: string) =>
+    setData(d => ({
+      ...d,
+      work: d.work.map(w => (w.id === id ? { ...w, pageBreakBefore: !w.pageBreakBefore } : w)),
+    }))
+
+  const toggleEduBreak = (id: string) =>
+    setData(d => ({
+      ...d,
+      education: d.education.map(e =>
+        e.id === id ? { ...e, pageBreakBefore: !e.pageBreakBefore } : e,
+      ),
+    }))
 
   const setWork = (id: string, field: keyof WorkItem, value: string) =>
     setData(d => ({
@@ -403,7 +444,11 @@ export default function App() {
         </header>
 
         {/* ── Work Experience ───────────────────────────── */}
-        <section className="section">
+        <section className={`section ${data.workPageBreak ? 'break-before' : ''}`}>
+          <PageBreakToggle
+            active={data.workPageBreak}
+            onToggle={() => toggleSectionBreak('workPageBreak')}
+          />
           <input
             className="f section-title"
             value={data.workTitle}
@@ -411,50 +456,60 @@ export default function App() {
           />
           <hr className="divider" />
           {data.work.map(w => (
-            <div key={w.id} className="row">
-              <div className="dates">
-                <input
-                  className="f date"
-                  value={w.from}
-                  onChange={e => setWork(w.id, 'from', e.target.value)}
-                  placeholder="From"
-                />
-                <span className="date-sep">–</span>
-                <input
-                  className="f date"
-                  value={w.to}
-                  onChange={e => setWork(w.id, 'to', e.target.value)}
-                  placeholder="To"
-                />
+            <div key={w.id} className={`row-wrap ${w.pageBreakBefore ? 'break-before' : ''}`}>
+              <PageBreakToggle
+                active={!!w.pageBreakBefore}
+                onToggle={() => toggleWorkBreak(w.id)}
+              />
+              <div className="row">
+                <div className="dates">
+                  <input
+                    className="f date"
+                    value={w.from}
+                    onChange={e => setWork(w.id, 'from', e.target.value)}
+                    placeholder="From"
+                  />
+                  <span className="date-sep">–</span>
+                  <input
+                    className="f date"
+                    value={w.to}
+                    onChange={e => setWork(w.id, 'to', e.target.value)}
+                    placeholder="To"
+                  />
+                </div>
+                <div className="col-content">
+                  <input
+                    className="f bold"
+                    value={w.jobTitle}
+                    onChange={e => setWork(w.id, 'jobTitle', e.target.value)}
+                    placeholder="Job Title"
+                  />
+                  <input
+                    className="f sub"
+                    value={w.company}
+                    onChange={e => setWork(w.id, 'company', e.target.value)}
+                    placeholder="Company"
+                  />
+                  <AutoTextarea
+                    className="f desc"
+                    value={w.description}
+                    onChange={v => setWork(w.id, 'description', v)}
+                    placeholder="Description"
+                  />
+                </div>
+                <button className="del no-print" onClick={() => removeWork(w.id)}>×</button>
               </div>
-              <div className="col-content">
-                <input
-                  className="f bold"
-                  value={w.jobTitle}
-                  onChange={e => setWork(w.id, 'jobTitle', e.target.value)}
-                  placeholder="Job Title"
-                />
-                <input
-                  className="f sub"
-                  value={w.company}
-                  onChange={e => setWork(w.id, 'company', e.target.value)}
-                  placeholder="Company"
-                />
-                <AutoTextarea
-                  className="f desc"
-                  value={w.description}
-                  onChange={v => setWork(w.id, 'description', v)}
-                  placeholder="Description"
-                />
-              </div>
-              <button className="del no-print" onClick={() => removeWork(w.id)}>×</button>
             </div>
           ))}
           <button className="add no-print" onClick={addWork}>+ Add</button>
         </section>
 
         {/* ── Education ─────────────────────────────────── */}
-        <section className="section">
+        <section className={`section ${data.eduPageBreak ? 'break-before' : ''}`}>
+          <PageBreakToggle
+            active={data.eduPageBreak}
+            onToggle={() => toggleSectionBreak('eduPageBreak')}
+          />
           <input
             className="f section-title"
             value={data.eduTitle}
@@ -462,50 +517,60 @@ export default function App() {
           />
           <hr className="divider" />
           {data.education.map(e => (
-            <div key={e.id} className="row">
-              <div className="dates">
-                <input
-                  className="f date"
-                  value={e.from}
-                  onChange={ev => setEdu(e.id, 'from', ev.target.value)}
-                  placeholder="From"
-                />
-                <span className="date-sep">–</span>
-                <input
-                  className="f date"
-                  value={e.to}
-                  onChange={ev => setEdu(e.id, 'to', ev.target.value)}
-                  placeholder="To"
-                />
+            <div key={e.id} className={`row-wrap ${e.pageBreakBefore ? 'break-before' : ''}`}>
+              <PageBreakToggle
+                active={!!e.pageBreakBefore}
+                onToggle={() => toggleEduBreak(e.id)}
+              />
+              <div className="row">
+                <div className="dates">
+                  <input
+                    className="f date"
+                    value={e.from}
+                    onChange={ev => setEdu(e.id, 'from', ev.target.value)}
+                    placeholder="From"
+                  />
+                  <span className="date-sep">–</span>
+                  <input
+                    className="f date"
+                    value={e.to}
+                    onChange={ev => setEdu(e.id, 'to', ev.target.value)}
+                    placeholder="To"
+                  />
+                </div>
+                <div className="col-content">
+                  <input
+                    className="f bold"
+                    value={e.studyTitle}
+                    onChange={ev => setEdu(e.id, 'studyTitle', ev.target.value)}
+                    placeholder="Degree"
+                  />
+                  <input
+                    className="f sub"
+                    value={e.school}
+                    onChange={ev => setEdu(e.id, 'school', ev.target.value)}
+                    placeholder="School"
+                  />
+                  <AutoTextarea
+                    className="f desc"
+                    value={e.description}
+                    onChange={v => setEdu(e.id, 'description', v)}
+                    placeholder="Description"
+                  />
+                </div>
+                <button className="del no-print" onClick={() => removeEdu(e.id)}>×</button>
               </div>
-              <div className="col-content">
-                <input
-                  className="f bold"
-                  value={e.studyTitle}
-                  onChange={ev => setEdu(e.id, 'studyTitle', ev.target.value)}
-                  placeholder="Degree"
-                />
-                <input
-                  className="f sub"
-                  value={e.school}
-                  onChange={ev => setEdu(e.id, 'school', ev.target.value)}
-                  placeholder="School"
-                />
-                <AutoTextarea
-                  className="f desc"
-                  value={e.description}
-                  onChange={v => setEdu(e.id, 'description', v)}
-                  placeholder="Description"
-                />
-              </div>
-              <button className="del no-print" onClick={() => removeEdu(e.id)}>×</button>
             </div>
           ))}
           <button className="add no-print" onClick={addEdu}>+ Add</button>
         </section>
 
         {/* ── Skills ───────────────────────────────────── */}
-        <section className="section">
+        <section className={`section ${data.skillsPageBreak ? 'break-before' : ''}`}>
+          <PageBreakToggle
+            active={data.skillsPageBreak}
+            onToggle={() => toggleSectionBreak('skillsPageBreak')}
+          />
           <input
             className="f section-title"
             value={data.skillsTitle}

@@ -4,12 +4,20 @@ import './App.css'
 // ── Types ────────────────────────────────────────────────────
 interface Personal {
   name: string
-  address: string
-  email: string
-  nationality: string
-  birthdate: string
-  gender: string
   picture: string
+  photoWidth: number
+  addressLabel: string
+  address: string
+  phoneLabel: string
+  phone: string
+  emailLabel: string
+  email: string
+  birthdateLabel: string
+  birthdate: string
+  genderLabel: string
+  gender: string
+  nationalityLabel: string
+  nationality: string
 }
 
 interface WorkItem {
@@ -49,12 +57,20 @@ interface ResumeData {
 const DEFAULT: ResumeData = {
   personal: {
     name: 'Full Name',
-    address: 'City, Country',
-    email: 'email@example.com',
-    nationality: 'Nationality',
-    birthdate: '01/01/1990',
-    gender: 'Gender',
     picture: '',
+    photoWidth: 96,
+    addressLabel: 'Address',
+    address: 'City, Country',
+    phoneLabel: 'Phone',
+    phone: '+00 000 000 0000',
+    emailLabel: 'Email',
+    email: 'email@example.com',
+    birthdateLabel: 'Date of birth',
+    birthdate: '01/01/1990',
+    genderLabel: 'Gender',
+    gender: 'Gender',
+    nationalityLabel: 'Nationality',
+    nationality: 'Nationality',
   },
   workTitle: 'Work Experience',
   eduTitle: 'Education',
@@ -86,6 +102,38 @@ const DEFAULT: ResumeData = {
   ],
 }
 
+// ── Icons ─────────────────────────────────────────────────────
+const IconPin = () => (
+  <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+    <path d="M8 1a5 5 0 0 0-5 5c0 3.5 4.5 9 5 9s5-5.5 5-9a5 5 0 0 0-5-5zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+  </svg>
+)
+const IconPhone = () => (
+  <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58L3.654 1.328z" />
+  </svg>
+)
+const IconEmail = () => (
+  <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.708 2.825L15 11.105V5.383zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741zM1 11.105l4.708-2.897L1 5.383v5.722z" />
+  </svg>
+)
+const IconCalendar = () => (
+  <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+  </svg>
+)
+const IconPerson = () => (
+  <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.029 10 8 10c-2.029 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+  </svg>
+)
+const IconGlobe = () => (
+  <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
+    <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z" />
+  </svg>
+)
+
 // ── Helpers ──────────────────────────────────────────────────
 function uid() {
   return Math.random().toString(36).slice(2, 9)
@@ -94,12 +142,17 @@ function uid() {
 function load(): ResumeData {
   try {
     const s = localStorage.getItem('resume')
-    if (s) return JSON.parse(s)
+    if (s) {
+      const p = JSON.parse(s)
+      // Merge with defaults so new fields are populated for existing users
+      return { ...DEFAULT, ...p, personal: { ...DEFAULT.personal, ...p.personal } }
+    }
   } catch {}
   return DEFAULT
 }
 
-// Auto-resizing textarea
+// ── Sub-components ────────────────────────────────────────────
+
 function AutoTextarea({
   value,
   onChange,
@@ -112,14 +165,12 @@ function AutoTextarea({
   placeholder?: string
 }) {
   const ref = useRef<HTMLTextAreaElement>(null)
-
   useEffect(() => {
     if (ref.current) {
       ref.current.style.height = 'auto'
       ref.current.style.height = ref.current.scrollHeight + 'px'
     }
   }, [value])
-
   return (
     <textarea
       ref={ref}
@@ -132,6 +183,87 @@ function AutoTextarea({
   )
 }
 
+function ContactRow({
+  icon,
+  label,
+  value,
+  onLabel,
+  onValue,
+  placeholder,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+  onLabel: (v: string) => void
+  onValue: (v: string) => void
+  placeholder?: string
+}) {
+  return (
+    <div className="contact-row">
+      <span className="contact-icon">{icon}</span>
+      <input
+        className="f contact-label"
+        value={label}
+        onChange={e => onLabel(e.target.value)}
+      />
+      <input
+        className="f contact-value"
+        value={value}
+        onChange={e => onValue(e.target.value)}
+        placeholder={placeholder}
+      />
+    </div>
+  )
+}
+
+function ResizablePhoto({
+  src,
+  width,
+  onWidthChange,
+  onUpload,
+}: {
+  src: string
+  width: number
+  onWidthChange: (w: number) => void
+  onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+}) {
+  const startX = useRef(0)
+  const startW = useRef(0)
+
+  const onHandleDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    startX.current = e.clientX
+    startW.current = width
+    const onMove = (ev: MouseEvent) => {
+      const delta = ev.clientX - startX.current
+      onWidthChange(Math.max(50, Math.min(200, startW.current + delta)))
+    }
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+    }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+  }
+
+  return (
+    <div
+      className={`photo-container ${!src ? 'empty' : ''}`}
+      style={{ width, height: width }}
+    >
+      <label className="photo-wrap">
+        {src ? (
+          <img src={src} className="photo" alt="" />
+        ) : (
+          <span className="photo-placeholder no-print">Click to add photo</span>
+        )}
+        <input type="file" accept="image/*" onChange={onUpload} className="no-print" />
+      </label>
+      <div className="resize-handle no-print" onMouseDown={onHandleDown} />
+    </div>
+  )
+}
+
 // ── App ──────────────────────────────────────────────────────
 export default function App() {
   const [data, setData] = useState<ResumeData>(load)
@@ -141,9 +273,11 @@ export default function App() {
     localStorage.setItem('resume', JSON.stringify(data))
   }, [data])
 
-  // Personal
   const setPersonal = (field: keyof Personal, value: string) =>
     setData(d => ({ ...d, personal: { ...d.personal, [field]: value } }))
+
+  const resizePhoto = (w: number) =>
+    setData(d => ({ ...d, personal: { ...d.personal, photoWidth: w } }))
 
   const onPicture = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -153,7 +287,6 @@ export default function App() {
     reader.readAsDataURL(file)
   }
 
-  // Work
   const setWork = (id: string, field: keyof WorkItem, value: string) =>
     setData(d => ({
       ...d,
@@ -163,16 +296,12 @@ export default function App() {
   const addWork = () =>
     setData(d => ({
       ...d,
-      work: [
-        ...d.work,
-        { id: uid(), from: '', to: '', jobTitle: '', company: '', description: '' },
-      ],
+      work: [...d.work, { id: uid(), from: '', to: '', jobTitle: '', company: '', description: '' }],
     }))
 
   const removeWork = (id: string) =>
     setData(d => ({ ...d, work: d.work.filter(w => w.id !== id) }))
 
-  // Education
   const setEdu = (id: string, field: keyof EduItem, value: string) =>
     setData(d => ({
       ...d,
@@ -191,7 +320,6 @@ export default function App() {
   const removeEdu = (id: string) =>
     setData(d => ({ ...d, education: d.education.filter(e => e.id !== id) }))
 
-  // Skills
   const addSkill = () => {
     const name = newSkill.trim()
     if (!name) return
@@ -202,57 +330,73 @@ export default function App() {
   const removeSkill = (id: string) =>
     setData(d => ({ ...d, skills: d.skills.filter(s => s.id !== id) }))
 
+  const p = data.personal
+
   return (
     <div className="page-bg">
       <div className="resume">
 
         {/* ── Personal ─────────────────────────────────── */}
         <header className="personal">
-          <label className={`photo-wrap ${!data.personal.picture ? 'empty' : ''}`}>
-            {data.personal.picture ? (
-              <img src={data.personal.picture} className="photo" alt="" />
-            ) : (
-              <span className="photo-placeholder no-print">Click to add photo</span>
-            )}
-            <input type="file" accept="image/*" onChange={onPicture} className="no-print" />
-          </label>
+          <ResizablePhoto
+            src={p.picture}
+            width={p.photoWidth}
+            onWidthChange={resizePhoto}
+            onUpload={onPicture}
+          />
 
           <div className="personal-info">
             <input
               className="f name"
-              value={data.personal.name}
+              value={p.name}
               onChange={e => setPersonal('name', e.target.value)}
             />
-            <div className="personal-row">
-              <input
-                className="f"
-                value={data.personal.address}
-                onChange={e => setPersonal('address', e.target.value)}
+
+            <div className="contact-group">
+              <ContactRow
+                icon={<IconPin />}
+                label={p.addressLabel}
+                value={p.address}
+                onLabel={v => setPersonal('addressLabel', v)}
+                onValue={v => setPersonal('address', v)}
               />
-              <span className="dot">·</span>
-              <input
-                className="f"
-                value={data.personal.email}
-                onChange={e => setPersonal('email', e.target.value)}
+              <ContactRow
+                icon={<IconPhone />}
+                label={p.phoneLabel}
+                value={p.phone}
+                onLabel={v => setPersonal('phoneLabel', v)}
+                onValue={v => setPersonal('phone', v)}
+              />
+              <ContactRow
+                icon={<IconEmail />}
+                label={p.emailLabel}
+                value={p.email}
+                onLabel={v => setPersonal('emailLabel', v)}
+                onValue={v => setPersonal('email', v)}
               />
             </div>
-            <div className="personal-row">
-              <input
-                className="f"
-                value={data.personal.nationality}
-                onChange={e => setPersonal('nationality', e.target.value)}
+
+            <div className="contact-group details-group">
+              <ContactRow
+                icon={<IconCalendar />}
+                label={p.birthdateLabel}
+                value={p.birthdate}
+                onLabel={v => setPersonal('birthdateLabel', v)}
+                onValue={v => setPersonal('birthdate', v)}
               />
-              <span className="dot">·</span>
-              <input
-                className="f"
-                value={data.personal.birthdate}
-                onChange={e => setPersonal('birthdate', e.target.value)}
+              <ContactRow
+                icon={<IconPerson />}
+                label={p.genderLabel}
+                value={p.gender}
+                onLabel={v => setPersonal('genderLabel', v)}
+                onValue={v => setPersonal('gender', v)}
               />
-              <span className="dot">·</span>
-              <input
-                className="f"
-                value={data.personal.gender}
-                onChange={e => setPersonal('gender', e.target.value)}
+              <ContactRow
+                icon={<IconGlobe />}
+                label={p.nationalityLabel}
+                value={p.nationality}
+                onLabel={v => setPersonal('nationalityLabel', v)}
+                onValue={v => setPersonal('nationality', v)}
               />
             </div>
           </div>
@@ -303,14 +447,10 @@ export default function App() {
                   placeholder="Description"
                 />
               </div>
-              <button className="del no-print" onClick={() => removeWork(w.id)}>
-                ×
-              </button>
+              <button className="del no-print" onClick={() => removeWork(w.id)}>×</button>
             </div>
           ))}
-          <button className="add no-print" onClick={addWork}>
-            + Add
-          </button>
+          <button className="add no-print" onClick={addWork}>+ Add</button>
         </section>
 
         {/* ── Education ─────────────────────────────────── */}
@@ -358,14 +498,10 @@ export default function App() {
                   placeholder="Description"
                 />
               </div>
-              <button className="del no-print" onClick={() => removeEdu(e.id)}>
-                ×
-              </button>
+              <button className="del no-print" onClick={() => removeEdu(e.id)}>×</button>
             </div>
           ))}
-          <button className="add no-print" onClick={addEdu}>
-            + Add
-          </button>
+          <button className="add no-print" onClick={addEdu}>+ Add</button>
         </section>
 
         {/* ── Skills ───────────────────────────────────── */}
@@ -380,9 +516,7 @@ export default function App() {
             {data.skills.map(s => (
               <span key={s.id} className="chip">
                 {s.name}
-                <button className="chip-del no-print" onClick={() => removeSkill(s.id)}>
-                  ×
-                </button>
+                <button className="chip-del no-print" onClick={() => removeSkill(s.id)}>×</button>
               </span>
             ))}
             <div className="chip-add no-print">

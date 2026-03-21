@@ -496,4 +496,8 @@
   .row-wrap {
     page-break-inside: avoid;
   }
+
+  .break-before {
+    padding-top: 15mm;
+  }
 }

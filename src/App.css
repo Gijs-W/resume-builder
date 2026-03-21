@@ -36,6 +36,16 @@
   border-color: #c33;
   color: #c33;
 }
+.toolbar-primary {
+  background: #1e3c82;
+  border-color: #1e3c82;
+  color: #fff;
+}
+.toolbar-primary:hover {
+  background: #162d61;
+  border-color: #162d61;
+  color: #fff;
+}
 
 /* ── Layout ───────────────────────────────────────────────── */
 .page-bg {

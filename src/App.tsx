@@ -421,6 +421,9 @@ export default function App() {
         <button className="toolbar-btn" onClick={onExport}>Export JSON</button>
         <input ref={importRef} type="file" accept=".json" onChange={onImport} style={{ display: 'none' }} />
       </div>
+      <div className="toolbar-group">
+        <button className="toolbar-btn toolbar-primary" onClick={() => window.print()}>Save as PDF</button>
+      </div>
     </div>
     <div className="page-bg">
       <div className="resume">

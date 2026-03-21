@@ -270,19 +270,25 @@ function ResizablePhoto({
     document.addEventListener('mouseup', onUp)
   }
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
   return (
     <div
       className={`photo-container ${!src ? 'empty' : ''}`}
       style={{ width, height: width }}
     >
-      <label className="photo-wrap">
+      <div className="photo-wrap no-print" onClick={() => inputRef.current?.click()}>
         {src ? (
-          <img src={src} className="photo" alt="" />
+          <>
+            <img src={src} className="photo" alt="" />
+            <span className="photo-overlay">Change photo</span>
+          </>
         ) : (
-          <span className="photo-placeholder no-print">Click to add photo</span>
+          <span className="photo-placeholder">Click to add photo</span>
         )}
-        <input type="file" accept="image/*" onChange={onUpload} className="no-print" />
-      </label>
+        <input ref={inputRef} type="file" accept="image/*" onChange={onUpload} style={{ display: 'none' }} />
+      </div>
+      {src && <img src={src} className="photo print-only" alt="" />}
       <div className="resize-handle no-print" onMouseDown={onHandleDown} />
     </div>
   )

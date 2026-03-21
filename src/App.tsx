@@ -292,6 +292,37 @@ function ResizablePhoto({
 export default function App() {
   const [data, setData] = useState<ResumeData>(load)
   const [newSkill, setNewSkill] = useState('')
+  const importRef = useRef<HTMLInputElement>(null)
+
+  const onExport = () => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'resume.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const onImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target!.result as string)
+        setData({ ...DEFAULT, ...parsed, personal: { ...DEFAULT.personal, ...parsed.personal } })
+      } catch {
+        alert('Invalid JSON file.')
+      }
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }
+
+  const onClear = () => {
+    if (confirm('Clear all resume data?')) setData(DEFAULT)
+  }
 
   useEffect(() => {
     localStorage.setItem('resume', JSON.stringify(data))
@@ -374,6 +405,17 @@ export default function App() {
   const p = data.personal
 
   return (
+    <>
+    <div className="toolbar no-print">
+      <div className="toolbar-group">
+        <button className="toolbar-btn toolbar-danger" onClick={onClear}>Clear</button>
+      </div>
+      <div className="toolbar-group">
+        <button className="toolbar-btn" onClick={() => importRef.current?.click()}>Import JSON</button>
+        <button className="toolbar-btn" onClick={onExport}>Export JSON</button>
+        <input ref={importRef} type="file" accept=".json" onChange={onImport} style={{ display: 'none' }} />
+      </div>
+    </div>
     <div className="page-bg">
       <div className="resume">
 
@@ -598,5 +640,6 @@ export default function App() {
 
       </div>
     </div>
+    </>
   )
 }

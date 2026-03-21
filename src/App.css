@@ -1,3 +1,42 @@
+/* ── Toolbar ──────────────────────────────────────────────── */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 6px;
+}
+
+.toolbar-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px 13px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #555;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+.toolbar-btn:hover {
+  border-color: #1e3c82;
+  color: #1e3c82;
+}
+.toolbar-danger:hover {
+  border-color: #c33;
+  color: #c33;
+}
+
 /* ── Layout ───────────────────────────────────────────────── */
 .page-bg {
   display: flex;

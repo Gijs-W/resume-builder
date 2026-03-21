@@ -239,7 +239,7 @@
 }
 
 .dates {
-  width: 85px;
+  width: 95px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;

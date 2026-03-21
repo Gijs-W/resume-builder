@@ -283,6 +283,8 @@
   resize: none;
   overflow: hidden;
   margin-top: 1px;
+  field-sizing: content;
+  min-height: 0;
 }
 
 /* ── Hover controls ───────────────────────────────────────── */

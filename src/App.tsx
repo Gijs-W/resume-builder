@@ -47,6 +47,7 @@ interface SkillItem {
 
 interface ResumeData {
   personal: Personal
+  summary: string
   workTitle: string
   eduTitle: string
   skillsTitle: string
@@ -77,6 +78,7 @@ const DEFAULT: ResumeData = {
     nationalityLabel: 'Nationality',
     nationality: 'Nationality',
   },
+  summary: '',
   workTitle: 'Work Experience',
   eduTitle: 'Education',
   skillsTitle: 'Skills',
@@ -493,6 +495,18 @@ export default function App() {
             </div>
           </div>
         </header>
+
+        {/* ── Summary ──────────────────────────────────── */}
+        {(data.summary || true) && (
+          <div className={`summary-section ${!data.summary ? 'summary-empty' : ''}`}>
+            <AutoTextarea
+              className="f summary-text"
+              value={data.summary}
+              onChange={v => setData(d => ({ ...d, summary: v }))}
+              placeholder="Write a short career summary…"
+            />
+          </div>
+        )}
 
         {/* ── Work Experience ───────────────────────────── */}
         <section className={`section ${data.workPageBreak ? 'break-before' : ''}`}>
